@@ -5,18 +5,18 @@ import {RouteComponentProps} from "react-router";
 import generatePath from "./generatePath";
 
 
-type PathParamsType = {
-  // param1: string,
-}
+// type PathParamsType = {
+//   // param1: string,
+// }
 
 // Your component own properties
-type Props = RouteComponentProps<PathParamsType> & {
+type Props = RouteComponentProps<{}> & {
   // someString: string,
   path?:any,
   onChangeIndex?:Function,
   children:any[],
   history?:any,
-  replace?:any,
+  replace?:boolean,
   index?:number,
   innerRef?:any,
   location?:any,

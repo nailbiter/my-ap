@@ -5,6 +5,10 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
+import SwipeableRoutes from "./SwipeableRoutes";
+import { BrowserRouter as Router, Route, Link, withRouter } from "react-router-dom";
+import {YellowView,GreenView,RedView,BlueView} from "./SwipeableRoutesExample";
+import {RouteComponentProps} from "react-router";
 
 function TabContainer(props:any) {
   return (
@@ -29,13 +33,15 @@ type Props = {
     classes?:any,
 };
 
-class SimpleTabs extends React.Component<Props> {
+class SimpleTabs extends React.Component<RouteComponentProps<{}>&Props,{value:number}> {
   state = {
     value: 0,
   };
 
   handleChange = (event:any, value:number) => {
     this.setState({ value });
+    console.log("handleChange: %d",value);
+    this.props.history.replace(SimpleTabs.PATHS[value]);
   };
 
   render() {
@@ -44,19 +50,33 @@ class SimpleTabs extends React.Component<Props> {
 
     return (
       <div className={classes.root}>
+      {/* <Router> */}
         <AppBar position="static">
           <Tabs value={value} onChange={this.handleChange}>
-            <Tab label="Item One" />
+            <Tab label="Item One"/>
             <Tab label="Item Two" />
             <Tab label="Item Three" />
+            <Tab label="Item Four" />
           </Tabs>
         </AppBar>
-        {value === 0 && <TabContainer>Item One</TabContainer>}
-        {value === 1 && <TabContainer>Item Two</TabContainer>}
-        {value === 2 && <TabContainer>Item Three</TabContainer>}
+          <SwipeableRoutes 
+            onChangeIndex={this.handleChangeIndex}
+          >
+            <Route path={SimpleTabs.PATHS[0]} component={RedView} />
+            <Route path={SimpleTabs.PATHS[1]} component={BlueView} />
+            <Route path={SimpleTabs.PATHS[2]} component={GreenView} />
+            <Route path={SimpleTabs.PATHS[3]} component={YellowView} />
+          </SwipeableRoutes>
+        {/* </Router> */}
       </div>
     );
   }
+  static PATHS:string[] = ["/red","/blue","/green","/yellow",];
+  handleChangeIndex = (index:number) => {
+    this.setState({
+      value:index,
+    });
+  }
 }
 
-export default withStyles(styles)(SimpleTabs);
+export default withRouter(withStyles(styles)(SimpleTabs));
